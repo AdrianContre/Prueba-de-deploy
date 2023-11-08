@@ -1,0 +1,41 @@
+{% extends "app/layout.html" %}
+{% load static %}
+{% block head %}
+    <link href="{% static 'app/main.css' %}" rel="stylesheet">
+{% endblock %}
+{% block body %}
+    <div class="form-box">
+        <div class="row">
+            <div class="col-12 col-lg-6 offset-lg-3 mb-4">
+                <h1 class="title-form">Crear comunidad</h1>
+                <form action="{% url 'createCommunity' %}" method="POST">
+                    {% csrf_token %}
+                    <label class="col-sm-2 col-form-label" for="community-id">ID</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control false" id="community-id" name="id" required="" rows="1" minlength="3" maxlength="20" style="overflow: hidden; overflow-wrap: break-word; resize: none; text-align: start; height: 36px;"></input>
+                    </div>
+
+                    <label class="col-sm-2 col-form-label" for="community-name">Name</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control false" id="community-name" name="name" required="" rows="1" minlength="3" maxlength="20" style="overflow: hidden; overflow-wrap: break-word; resize: none; text-align: start; height: 36px;"></input>
+                    </div>
+
+                    <label class="col-sm-2 col-form-label" for="community-avatar">Avatar</label>
+                    <div class="col-sm-10">
+                        <input type="file" class="form-control false" id="community-avatar" name="avatar" accept="image/*">
+                    </div>
+
+                    <label class="col-sm-2 col-form-label" for="community-banner">Banner</label>
+                    <div class="col-sm-10">
+                        <input type="file" class="form-control false" id="community-banner" name="banner" accept="image/*">
+                    </div>
+
+                    <div class="col-sm-10">
+                        <br>
+                        <button type="submit" class="btn btn-success">Crear</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}

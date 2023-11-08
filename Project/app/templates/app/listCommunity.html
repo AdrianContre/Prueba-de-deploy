@@ -1,0 +1,77 @@
+{% extends "app/layout.html" %}
+{% load static %}
+{% block head %}
+    <link href="{% static 'app/main.css' %}" rel="stylesheet">
+{% endblock %}
+{% block body %}
+    <style>
+        .custom-margin {
+            margin-left: 200px;
+            margin-right: 200px;
+        }
+        h1 {
+            font-size: 20px;
+            margin-top: 10px; /* Increase the margin above the dropdown menu */
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 8px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        .margin-button {
+            margin-top: 10px;
+            margin-bottom: 20px;
+        }
+        .align-right {
+            background-color: white;
+            border-color: black;
+            color: black;
+            float: right;
+            margin-top: 10px;
+        }
+
+    </style>
+    <div class="custom-margin">
+        <h1>Lista de Comunidades</h1>
+        <div>
+            <div class="btn-group margin-button"  role="group" aria-label="Basic example">
+                <a href="{% url 'listCommunity' %}?button=Subscrit" class="btn btn-secondary rareButton">Subscrito</a>
+                <a href="{% url 'listCommunity' %}?button=Tot" class="btn btn-secondary rareButton">Todo</a>
+            </div>
+            <a href="{% url 'createCommunity' %}" class="btn btn-primary align-right">Crear Comunidad</a>
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Subscriptores</th>
+                    <th>Publicaciones</th>
+                    <th>Comentarios</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for c in communities %}
+                <tr>
+                    <td>{{c.0.name}}</td>
+                    <td>{{c.0.subs}}</td>
+                    <td>{{c.0.publi}}</td>
+                    <td>{{c.0.comments}}</td>
+                    {% if c.1 == False %}
+                        <td><a href="{% url 'subscribeCommunity' community_name=c.0.name %}" class="btn btn-success">Suscríbete</a></td>
+                    {% else %}
+                        <td><a href="{% url 'subscribeCommunity' community_name=c.0.name %}" class="btn btn-danger">Desuscríbete</a></td>
+                    {% endif %}
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

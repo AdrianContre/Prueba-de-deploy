@@ -1,0 +1,36 @@
+.profile-container {
+    display: flex;
+    border: 3px solid #dbe3f1;
+    border-radius: 5px;
+    margin: 20px auto;
+    padding: 20px;
+    width: 80%;
+    overflow: hidden;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.form-container p {
+    margin-bottom: 50px;
+}
+
+.button-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.save-button {
+    background-color: #007bff;
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.cancel-link {
+    text-decoration: none;
+    color: #007bff;
+    padding: 10px 20px;
+}

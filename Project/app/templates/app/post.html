@@ -1,0 +1,192 @@
+<!--Template para renderizar un único post, todo dependerá del post que se le pase desde la view-->
+{% extends "app/layout.html" %}
+{% load static %}
+
+{% block head %}
+<link rel="stylesheet" href="{% static 'app/main.css' %}">
+{% endblock %}
+{% block body %}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        .custom-margin2 {
+            margin-left: 200px;
+            margin-right: 200px;
+        }
+
+    </style>
+<div class="custom-margin2">
+    <div class="post container-lg">
+        <div class="row">
+            <div class="col-12 col-md-8 col-lg-9 mb-3">
+                <p>
+                    <h4><b>{{ p.title }}</b></h4>
+                </p>
+                <p>
+                    <!-- En estos href debe de ir el link hacia el profile que se esté clicando o la comunidad -->
+                    <a href="{% url 'userProfile' username=p.poster.username %}" style="text-decoration:none;"><span style="color: blue;">{{ p.poster.username }}</span></a> a <a href="#" style="text-decoration:none"><span
+                        style="color: orange">{{ p.community.name }}</span></a> • {{ p.created_at }}
+                </p>
+                <article class="col-12 card my-2 p-2" id="postContent">
+                    <div class="md-div">
+                        <p>{{ p.description }}</p>
+                    </div>
+                </article>
+                <div class="row px-4">
+                    <!--Aqui hacen falta un par de ifs por si hay que poner el icono resaltado o si hay que ponerlo normal-->
+                    <div class="col-auto mr-2">
+                        <a href="{% url 'post' postId=p.id %}#comments_section" class="link"><i class="far fa-comment"></i></a>
+                    </div>
+                    <div class="col-auto mr-2">
+                        {% if voted == True and type == 'positive' %}
+                            <a href="{% url 'vote' postId=p.id typeV='positive' %}" class="link"><i class="fa-solid fa-arrow-up" style="color: #e00b0b;"></i></a>
+                        {% else %}
+                            <a href="{% url 'vote' postId=p.id typeV='positive' %}" class="link"><i class="fa-solid fa-arrow-up"></i></a>
+                        {% endif %}
+                    </div>
+                    <div class="col-auto">
+                        <p class="mr-2">
+                            {{votes}}
+                        </p>
+                    </div>
+                    <div class="col-auto mr-2">
+                        {% if voted == True and type == 'negative' %}
+                            <a href="{% url 'vote' postId=p.id typeV='negative' %}" class="link"><i class="fa-solid fa-arrow-down" style="color: #e00b0b;"></i></a>
+                        {% else %}
+                            <a href="{% url 'vote' postId=p.id typeV='negative' %}" class="link"><i class="fa-solid fa-arrow-down"></i></a>
+                        {% endif %}
+                    </div>
+                    <div class="col-auto mr-2">
+                        {% if liked == True %}
+                        <a href="{% url 'like' postId=p.id %}" class="link"><i class="far fa-star" style="color: #eef202;"></i></a>
+                        {% else %}
+                            <a href="{% url 'like' postId=p.id %}" class="link"><i class="far fa-star"></i></a>
+                        {% endif %}
+                    </div>
+                    {% if request.user == p.poster %}
+                        <div class="dropdown col-auto">
+                            <button class="btn btn-light dropdown-toggle p-0 text-dark" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                &#8942; <!-- Icono de tres puntos verticales en negro -->
+                            </button>
+                            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                <li><a class="dropdown-item" href="{% url 'edit' postId=p.id %}"><i class="fa-regular fa-pen-to-square"></i>Editar</a></li>
+                                <li><a class="dropdown-item" href="{% url 'delete' postId=p.id %}"><i class="fa-solid fa-trash-can"></i>Eliminar</a></li>
+                            </ul>
+                        </div>
+                    {% endif %}
+                </div>
+                <hr class="my-3">
+                <!-- La URL de la acción de este formulario debe de ser enviar el valor del textarea al backend y procesar lo que queramos -->
+                <form method="POST" action="{% url 'comment' postId=p.id %}">
+                    {% csrf_token %}
+                    <textarea class="form-control" placeholder="Escriba aquí para comentar..." name="comentari"></textarea>
+                    <br>
+                    <input type="submit" class="btn btn-success mt-2" value="Publicar">
+                </form>
+                <!-- Renderizar todos los comentarios -->
+                <br>
+                <div id="comments_section">
+                    <ul class="list-group comments">
+                        {% for c in comments %}
+                        <li class="list-group-item comment">
+                            <p><a href="{% url 'userProfile' username=c.0.commentor.username %}" style="text-decoration:none;"><span style="color: blue;">{{ c.0.commentor.username }}</span></a>   ·  {{c.0.resta}}</p>
+                            {% if c.0.editing %}
+                                <form method="POST" action="{% url 'editComment' commentId=c.0.id %}">
+                                    {% csrf_token %}
+                                    <textarea class="form-control" name="content">{{ c.0.content }}</textarea>
+                                    <br>
+                                    <div class="col">
+                                        <input type="submit" class="btn btn-success mr-2" value="Guardar">
+                                        <button class="btn btn-success"><a style="text-decoration:none;color:white" href="{% url 'cancelEdit' commentId=c.0.id %}">Cancelar</a></button>
+                                    </div>
+                                </form>
+                            {% else %}
+                                <p>{{ c.0.content }}</p>
+                            {% endif %}
+                            {% if c.0.editing == False %}
+                                <div class="row">
+                                    <div class="col-auto">
+                                        {% if c.1 and c.2 == 'positive' %}
+                                            <a href="{% url 'voteComment' commentId=c.0.id typeV='positive' %}" class="link"><i class="fa-solid fa-arrow-up" style="color: #e00b0b;"></i></a>
+                                        {% else  %}
+                                            <a href="{% url 'voteComment' commentId=c.0.id typeV='positive' %}" class="link"><i class="fa-solid fa-arrow-up"></i></a>
+                                        {% endif %}
+                                    </div>
+                                    <div class="col-auto">
+                                        <p class="mr-2">
+                                            {{c.0.positive}}
+                                        </p>
+                                    </div>
+                                    <div class="col-auto">
+                                        {% if c.1 and c.2 == 'negative' %}
+                                            <a href="{% url 'voteComment' commentId=c.0.id typeV='negative' %}" class="link"><i class="fa-solid fa-arrow-down" style="color: #e00b0b;"></i></a>
+                                        {% else  %}
+                                            <a href="{% url 'voteComment' commentId=c.0.id typeV='negative' %}" class="link"><i class="fa-solid fa-arrow-down"></i></a>
+                                        {% endif %}
+                                    </div>
+                                    <div class="col-auto">
+                                        <p class="mr-2">
+                                            {{c.0.negative}}
+                                        </p>
+                                    </div>
+                                    <div class="col-auto mr-2">
+                                        {% if c.3 == True %}
+                                            <a href="{% url 'likeComment' commentId=c.0.id %}" class="link"><i class="far fa-star" style="color: #eef202;"></i></a>
+                                        {% else %}
+                                            <a href="{% url 'likeComment' commentId=c.0.id %}" class="link"><i class="far fa-star"></i></a>
+                                        {% endif %}
+                                    </div>
+                                    <div class="col-auto">
+                                       <button type="button" class="btn btn-light btn-sm" data-bs-toggle="modal" data-bs-target="#exampleModal_{{c.0.id}}">
+                                        <i class="fa-solid fa-reply"></i>
+                                      </button>
+                                    </div>
+                                    {% if request.user == c.0.commentor %}
+                                        <div class="dropdown col-auto">
+                                            <button class="btn btn-light dropdown-toggle p-0 text-dark" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                &#8942; <!-- Icono de tres puntos verticales en negro -->
+                                            </button>
+                                            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                                <li><a class="dropdown-item" href="{% url 'editComment' commentId=c.0.id %}"><i class="fa-regular fa-pen-to-square"></i>Editar</a></li>
+                                                <li><a class="dropdown-item" href="{% url 'deleteComment' commentId=c.0.id %}"><i class="fa-solid fa-trash-can"></i>Eliminar</a></li>
+                                            </ul>
+                                        </div>
+                                    {% endif %}
+                                </div>
+                                <div class="modal fade" id="exampleModal_{{c.0.id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                      <div class="modal-content">
+                                        <div class="modal-header">
+                                          <h1 class="modal-title fs-5" id="exampleModalLabel">Reply</h1>
+                                          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                          <form action="{% url 'replyComment' commentId=c.0.id %}" method="POST">
+                                            {% csrf_token %}
+                                                <textarea style="border-radius: 10px;" name="reply_comment" cols="50" rows="6"></textarea>
+                                                <br>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+                                                    <button type="submit" class="btn btn-success">Responder</button>
+                                                </div>
+                                          </form>
+                                        </div>
+                                      </div>
+                                    </div>
+                                </div>
+                            {% endif %}
+                            {% with c.0.replies.all as subcomments %}
+                                {% if subcomments %}
+                                    <ul class="list-group">
+                                    {% include "app/comment_template.html" with comments=subcomments info=infoSubcomments %}
+                                    </ul>
+                                {% endif %}
+                            {% endwith %}
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

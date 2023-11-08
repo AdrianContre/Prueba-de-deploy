@@ -1,0 +1,33 @@
+{% extends "app/layout.html" %}
+{% load static %}
+{% block head %}
+    <link href="{% static 'app/userProfile.css' %}" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+{% endblock %}
+{% block body %}
+    <div class="profile-container">
+        <div class="banner-container">
+            {% if user_profile.banner %}
+                <img src="{{ user_profile.banner.url }}" class="banner-image">
+            {% endif %}
+        </div>
+        <div class="profile-content">
+            <img src="{% if user_profile.avatar %}{{ user_profile.avatar.url }}{% endif %}" class="profile-avatar">
+            <h1 class="title-user"> {{ user_profile.first_name }} {{ user_profile.last_name }}</h1>
+            {% if user_profile.username == request.user.username %}
+                <a href="{% url 'edit_user_profile' user.username %}" class="edit-icon">
+                    <i class="fa-solid fa-gear fa-2x"></i>
+                </a>
+            {% endif %}
+        </div>
+        <div class="profile-info">
+            <p>@{{ user_profile.username }}</p>
+            <p> {{ user_profile.bio }}</p>
+            <p><strong>Fecha de registro:</strong> {{ user_profile.date_joined }}</p>
+            <div class="profile-stats">
+                <p><strong>{{ user_posts.count }}</strong> Publicaciones</p>
+                <p><strong>{{ user_comments.count }}</strong> Comentarios</p>
+            </div>
+        </div>
+    </div>
+{% endblock %}

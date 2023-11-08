@@ -1,0 +1,61 @@
+{% extends "app/layout.html" %}
+{% load static %}
+{% block body %}
+      <style>
+        .custom-margin {
+            margin-left: 200px;
+            margin-right: 200px;
+        }
+        h1 {
+            font-size: 20px;
+            margin-top: 10px; /* Increase the margin above the dropdown menu */
+        }
+        .dropdown {
+            margin-top: 20px; /* Increase the margin above the dropdown menu */
+        }
+        h2 {
+            font-size: 20px;
+            margin-right: 10px; /* Add some space between the text and the text box */
+        }
+        .textbox {
+            margin-top: 20px;
+            display: flex;
+            align-items: center;
+        }
+    </style>
+    <div class="custom-margin">
+        <h1>Buscar</h1>
+        <form method="post">
+            <input type="hidden" name="name" value="tipusCerca">
+            {% csrf_token %}
+            <div class="dropdown">
+                <button class="btn btn-secondary dropdown-toggle" style="background-color: white; color: black;" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    {% if not cercaForm.order.value %}
+                        Comentaris
+                    {% else %}
+                        {% for choice in cercaForm.Form_CHOICES %}
+                            {% if choice.1 == cercaForm.order.value %}
+                                {{ choice.0 }}
+                            {% endif %}
+                        {% endfor %}
+                    {% endif %}
+                </button>
+                <ul class="dropdown-menu">
+                    {% for choice in cercaForm.Form_CHOICES %}
+                        <button class="dropdown-item" style="background-color: white; color: black;" onclick="this.style.backgroundColor = 'white';" type="submit" name="order" value="{{ choice.1 }}">{{ choice.0 }}</button>
+                    {% endfor %}
+                </ul>
+            </div>
+        </form>
+        <div class="textbox">
+            <h2>Introdueixi el cos del comentari:</h2>
+            <form method="post" action="{% url 'proccess_comentaris' %}">
+                <input type="hidden" name="name" value="buscarB">
+                {% csrf_token %}
+                {{ form.text_input }}
+                <button type="submit" class="btn btn-primary" style="margin-left: 10px; background-color: black; border-color: black; color: white;">Buscar</button>
+            </form>
+        </div>
+        <h2>No existeix cap comentari amb el cos introduït</h2>
+    </div>
+{% endblock %}

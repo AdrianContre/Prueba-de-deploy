@@ -1,0 +1,105 @@
+{% extends "app/layout.html" %}
+{% load static %}
+{% block body %}
+    <style>
+        .custom-margin {
+            margin-left: 200px;
+            margin-right: 200px;
+        }
+        .filtre {
+            margin-top: 20px;
+        }
+        .rareButton {
+            color: black;             /* Default text color */
+            background-color: white;  /* Default background color */
+            margin-left: 20px;
+}
+    </style>
+    <div class="custom-margin filtre">
+        <form method="post">
+            {% csrf_token %}
+            <div class="dropdown">
+                <button class="btn btn-secondary dropdown-toggle" style="background-color: white; color: black;" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    {% if not form.order.value %}
+                        Nou
+                    {% else %}
+                        {% for choice in form.ORDER_CHOICES %}
+                            {% if choice.1 == form.order.value %}
+                                {{ choice.0 }}
+                            {% endif %}
+                        {% endfor %}
+                    {% endif %}
+                </button>
+                <ul class="dropdown-menu">
+                    {% for choice in form.ORDER_CHOICES %}
+                        <button class="dropdown-item" style="background-color: white; color: black;" onclick="this.style.backgroundColor = 'white';" type="submit" name="order" value="{{ choice.1 }}">{{ choice.0 }}</button>
+                    {% endfor %}
+                </ul>
+                <div class="btn-group" role="group" aria-label="Basic example">
+                    <a href="{% url 'boto_rar' %}?button=Subscrit" class="btn btn-secondary rareButton">Subscrit</a>
+                    <a href="{% url 'boto_rar' %}?button=Tot" class="btn btn-secondary rareButton">Tot</a>
+                </div>
+            </div>
+        </form>
+        <div class="form-box">
+            <div class="row">
+                {% for p in posts %}
+                    <div class="col-12 col-lg-6 offset-lg-3 mb-4">
+                    <p>
+                        <a style="color:black; text-decoration:none;" href="{% url 'post' postId=p.0.id %}"> <h4><b>{{p.0.title}}</b></h4></a>
+                    </p>
+                        <p>
+                        <a href="{% url 'userProfile' username=p.0.poster.username %}" style="text-decoration:none;"><span style="color:blue">{{ p.0.poster.username }}</span></a> a <a href="#" style="text-decoration:none"><span style="color:orange">{{ p.0.community.name }}</span></a>  • {{ p.0.created_at }}
+                        <div class="row px-4">
+                            <div class="col-auto mr-2">
+                                <a href="{% url 'post' postId=p.0.id %}#comments_section" class="link"><i class="far fa-comment"></i></a>
+                            </div>
+                            <div class="col-auto mr-2">
+                                <p>{{p.0.numComments}}</p>
+                            </div>
+                            <div class="col-auto mr-2">
+                                {% if p.1 == True and p.2 == 'positive' %}
+                                    <a href="{% url 'voteInPosts' postId=p.0.id typeV='positive' %}" class="link"><i class="fa-solid fa-arrow-up" style="color: #e00b0b;"></i></a>
+                                {% else %}
+                                    <a href="{% url 'voteInPosts' postId=p.0.id typeV='positive' %}" class="link"><i class="fa-solid fa-arrow-up"></i></a>
+                                {% endif %}
+                            </div>
+                            <div class="col-auto">
+                                <p class="mr-2">
+                                    {{p.0.resta}}
+                                </p>
+                            </div>
+                            <div class="col-auto mr-2">
+                                {% if p.1 == True and p.2 == 'negative' %}
+                                    <a href="{% url 'voteInPosts' postId=p.0.id typeV='negative' %}" class="link"><i class="fa-solid fa-arrow-down" style="color: #e00b0b;"></i></a>
+                                {% else %}
+                                    <a href="{% url 'voteInPosts' postId=p.0.id typeV='negative' %}" class="link"><i class="fa-solid fa-arrow-down"></i></a>
+                                {% endif %}
+                            </div>
+                            <div class="col-auto mr-2">
+                                {% if p.3 == True %}
+                                    <a href="{% url 'likeInPosts' postId=p.0.id %}" class="link"><i class="far fa-star" style="color: #eef202;"></i></a>
+                                {% else %}
+                                    <a href="{% url 'likeInPosts' postId=p.0.id %}" class="link"><i class="far fa-star"></i></a>
+                                {% endif %}
+                            </div>
+                            {% if request.user == p.0.poster %}
+                                <div class="dropdown col-auto">
+                                    <button class="btn btn-light dropdown-toggle p-0 text-dark" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        &#8942; <!-- Icono de tres puntos verticales en negro -->
+                                    </button>
+                                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                        <li><a class="dropdown-item" href="{% url 'edit' postId=p.0.id %}"><i class="fa-regular fa-pen-to-square"></i>Editar</a></li>
+                                        <li><a class="dropdown-item" href="{% url 'delete' postId=p.0.id %}"><i class="fa-solid fa-trash-can"></i>Eliminar</a></li>
+                                    </ul>
+                                </div>
+                            {% endif %}
+                        </div>
+                    <hr class="my-3">
+                    </div>
+
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+{% endblock %}
