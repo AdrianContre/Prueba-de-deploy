@@ -62,16 +62,63 @@ def index(request):
 def view_userProfile(request, username):
     try:
         user_profile = User.objects.get(username=username)
-        user_posts = Post.objects.filter(poster=user_profile)
+        user_posts = Post.objects.filter(poster=user_profile).order_by('-created_at')
         user_comments = Comment.objects.filter(user_profile=user_profile)
+        button = request.GET.get('button', 'Publicaciones')  # Por defecto a 'Publicaciones'
+        liked_posts = Like.objects.filter(user_like=user_profile)
+        liked_comments = LikeComment.objects.filter(user_like=user_profile)
+
+        infoPosts = []
+        for p in user_posts:
+            u = request.user
+            v = 'caca'
+            try:
+                b = Votes.objects.get(voter=u, post=p)
+                v = b.type
+                b = True
+            except:
+                b = False
+                v = None
+
+            try:
+                l = Like.objects.get(user_like=u, post_liked=p)
+                liked = True
+            except:
+                liked = False
+            infoPosts.append((p, b, v, liked))
+
+        array_comments = []
+        for c in user_comments:
+            voted = None
+            t = None
+            lik = None
+            try:
+                vc = VotesComments.objects.get(voter=u, comment=c)
+                voted = True
+                t = vc.type
+            except:
+                voted = False
+                t = None
+            try:
+                lc = LikeComment.objects.get(user_like=u, comment_liked=c)
+                lik = True
+            except:
+                lik = False
+            array_comments.append((c, voted, t, lik))
+
+        liked_posts_info = [(lp.post_liked, None, None, True) for lp in liked_posts]
+        liked_comments_info = [(lc.comment_liked, None, None, True) for lc in liked_comments]
+
     except User.DoesNotExist:
         raise Http404("El usuario no existe")
 
-
     return render(request, 'app/userProfile.html', {
         'user_profile': user_profile,
-        'user_posts': user_posts,
-        'user_comments': user_comments,
+        'user_posts': infoPosts,
+        'user_comments': array_comments,
+        'button': button,
+        'like_posts': liked_posts_info,
+        'like_comments': liked_comments_info,
     })
 def login(request):
     return render(request,'app/login.html')
@@ -312,9 +359,16 @@ def vote(request, postId, typeV):
     updateInfoVotes(request,postId,typeV)
     return HttpResponseRedirect(reverse('post', kwargs={'postId': postId}))
 
+
 def voteInPosts(request,postId,typeV):
     updateInfoVotes(request,postId,typeV)
     return HttpResponseRedirect(reverse('index'))
+
+def voteInProfile(request,postId,typeV,username):
+    updateInfoVotes(request,postId,typeV)
+    user = User.objects.get(username=username)
+    return HttpResponseRedirect(reverse('userProfile', kwargs={'username': user.username}))
+
 
 def updateInfoVotes(request,postId,typeV):
     if request.user.is_anonymous:
@@ -362,6 +416,7 @@ def updateInfoVotes(request,postId,typeV):
                     p.positive = p.positive - 1
                     p.save()
 
+
 def like(request, postId):
     updatePostLike(request,postId)
     return HttpResponseRedirect(reverse('post', kwargs={'postId': postId}))
@@ -369,6 +424,11 @@ def like(request, postId):
 def likeInPosts(request,postId):
     updatePostLike(request,postId)
     return HttpResponseRedirect(reverse('index'))
+
+def likeInProfile(request,postId,username):
+    updatePostLike(request,postId)
+    user = User.objects.get(username=username)
+    return HttpResponseRedirect(reverse('userProfile', kwargs={'username': user.username}))
 
 
 def updatePostLike(request,postId):
