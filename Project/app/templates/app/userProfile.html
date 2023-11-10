@@ -5,6 +5,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 {% endblock %}
 {% block body %}
+    <!-- info perfil -->
     <div class="profile-container">
         <div class="banner-container">
             {% if user_profile.banner %}
@@ -23,11 +24,155 @@
         <div class="profile-info">
             <p>@{{ user_profile.username }}</p>
             <p> {{ user_profile.bio }}</p>
-            <p><strong>Fecha de registro:</strong> {{ user_profile.date_joined }}</p>
+            <p><strong>Data de registre:</strong> {{ user_profile.date_joined }}</p>
             <div class="profile-stats">
-                <p><strong>{{ user_posts.count }}</strong> Publicaciones</p>
-                <p><strong>{{ user_comments.count }}</strong> Comentarios</p>
+                <p><strong>{{ user_posts|length }}</strong> Publicacions</p>
+                <p><strong>{{ user_comments|length }}</strong> Comentaris</p>
             </div>
         </div>
+    </div>
+    <!-- posts i comentaris -->
+    <div class="btn-group custom-margin"  role="group" aria-label="Basic example">
+        <a href="{% url 'userProfile' username=user_profile.username %}?button=Publicaciones" class="btn btn-secondary rareButton">Publicacions</a>
+        <a href="{% url 'userProfile' username=user_profile.username %}?button=Comentarios" class="btn btn-secondary rareButton">Comentaris</a>
+        <a href="{% url 'userProfile' username=user_profile.username %}?button=Desats" class="btn btn-secondary rareButton">Desats</a>
+    </div>
+    <div class="posts-comments">
+        {% if button == "Publicaciones" %}
+            {% for p in user_posts %}
+                <div class="col-12 col-lg-6 offset-lg-3 mb-4">
+                    <p>
+                        <a style="color:black; text-decoration:none;" href="{% url 'post' postId=p.0.id %}"> <h4><b>{{p.0.title}}</b></h4></a>
+                    </p>
+                        <p>
+                        <a href="{% url 'userProfile' username=p.0.poster.username %}" style="text-decoration:none;"><span style="color:blue">{{ p.0.poster.username }}</span></a> a <a href="#" style="text-decoration:none"><span style="color:orange">{{ p.0.community.name }}</span></a>  • {{ p.0.created_at }}
+                    <div class="row px-4">
+                        <div class="col-auto mr-2">
+                            <a href="#" class="link"><i class="far fa-comment"></i></a>
+                        </div>
+                        <div class="col-auto mr-2">
+                            <p>{{p.0.numComments}}</p>
+                        </div>
+                        <div class="col-auto mr-2">
+                            {% if p.1 == True and p.2 == 'positive' %}
+                                <a href="{% url 'voteInProfile' postId=p.0.id typeV='positive' username=user_profile.username%}" class="link"><i class="fa-solid fa-arrow-up" style="color: #e00b0b;"></i></a>
+                            {% else %}
+                                <a href="{% url 'voteInProfile' postId=p.0.id typeV='positive' username=user_profile.username %}" class="link"><i class="fa-solid fa-arrow-up"></i></a>
+                            {% endif %}
+                        </div>
+                        <div class="col-auto">
+                            <p class="mr-2">
+                                {{p.0.resta}}
+                            </p>
+                        </div>
+                        <div class="col-auto mr-2">
+                            {% if p.1 == True and p.2 == 'negative' %}
+                                <a href="{% url 'voteInProfile' postId=p.0.id typeV='negative' username=user_profile.username %}" class="link"><i class="fa-solid fa-arrow-down" style="color: #e00b0b;"></i></a>
+                            {% else %}
+                                <a href="{% url 'voteInProfile' postId=p.0.id typeV='negative' username=user_profile.username %}" class="link"><i class="fa-solid fa-arrow-down"></i></a>
+                            {% endif %}
+                        </div>
+                        <div class="col-auto mr-2">
+                            {% if p.3 == True %}
+                                <a href="{% url 'likeInProfile' postId=p.0.id username=user_profile.username %}" class="link"><i class="far fa-star" style="color: #eef202;"></i></a>
+                            {% else %}
+                                <a href="{% url 'likeInProfile' postId=p.0.id username=user_profile.username %}" class="link"><i class="far fa-star"></i></a>
+                            {% endif %}
+                        </div>
+                        {% if request.user == p.0.poster %}
+                            <div class="dropdown col-auto">
+                                <button class="btn btn-light dropdown-toggle p-0 text-dark" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    &#8942; <!-- Icono de tres puntos verticales en negro -->
+                                </button>
+                                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                    <li><a class="dropdown-item" href="{% url 'edit' postId=p.0.id %}"><i class="fa-regular fa-pen-to-square"></i>Editar</a></li>
+                                    <li><a class="dropdown-item" href="{% url 'delete' postId=p.0.id %}"><i class="fa-solid fa-trash-can"></i>Eliminar</a></li>
+                                </ul>
+                            </div>
+                        {% endif %}
+                    </div>
+                    <hr class="my-3">
+                </div>
+            {% empty %}
+                <div class="custom-margin">
+                    <p>Encara no has fet ninguna publicació</p>
+                </div>
+            {% endfor %}
+        {% endif %}
+        {% if button == "Comentarios" %}
+            {% for c in user_comments %}
+                <p>{{c.content}}</p>
+            {% empty %}
+                <div class="custom-margin">
+                    <p>Encara no has fet cap comentari</p>
+                </div>
+            {% endfor %}
+        {% endif %}
+        {% if button == "Desats" %}
+            {% if like_posts|length != 0 or like_comments|length != 0 %}
+                {% for p in like_posts %}
+                    <div class="col-12 col-lg-6 offset-lg-3 mb-4">
+                        <p>
+                            <a style="color:black; text-decoration:none;" href="{% url 'post' postId=p.0.id %}"> <h4><b>{{p.0.title}}</b></h4></a>
+                        </p>
+                            <p>
+                            <a href="{% url 'userProfile' username=p.0.poster.username %}" style="text-decoration:none;"><span style="color:blue">{{ p.0.poster.username }}</span></a> a <a href="#" style="text-decoration:none"><span style="color:orange">{{ p.0.community.name }}</span></a>  • {{ p.0.created_at }}
+                        <div class="row px-4">
+                            <div class="col-auto mr-2">
+                                <a href="#" class="link"><i class="far fa-comment"></i></a>
+                            </div>
+                            <div class="col-auto mr-2">
+                                <p>{{p.0.numComments}}</p>
+                            </div>
+                            <div class="col-auto mr-2">
+                                {% if p.1 == True and p.2 == 'positive' %}
+                                    <a href="{% url 'vote' postId=p.0.id typeV='positive' userId=p.0.poster %}" class="link"><i class="fa-solid fa-arrow-up" style="color: #e00b0b;"></i></a>
+                                {% else %}
+                                    <a href="{% url 'vote' postId=p.0.id typeV='positive' %}" class="link"><i class="fa-solid fa-arrow-up"></i></a>
+                                {% endif %}
+                            </div>
+                            <div class="col-auto">
+                                <p class="mr-2">
+                                    {{p.0.resta}}
+                                </p>
+                            </div>
+                            <div class="col-auto mr-2">
+                                {% if p.1 == True and p.2 == 'negative' %}
+                                    <a href="{% url 'vote' postId=p.0.id typeV='negative' %}" class="link"><i class="fa-solid fa-arrow-down" style="color: #e00b0b;"></i></a>
+                                {% else %}
+                                    <a href="{% url 'vote' postId=p.0.id typeV='negative' %}" class="link"><i class="fa-solid fa-arrow-down"></i></a>
+                                {% endif %}
+                            </div>
+                            <div class="col-auto mr-2">
+                                {% if p.3 == True %}
+                                    <a href="{% url 'like' postId=p.0.id %}" class="link"><i class="far fa-star" style="color: #eef202;"></i></a>
+                                {% else %}
+                                    <a href="{% url 'like' postId=p.0.id %}" class="link"><i class="far fa-star"></i></a>
+                                {% endif %}
+                            </div>
+                            {% if request.user == p.0.poster %}
+                                <div class="dropdown col-auto">
+                                    <button class="btn btn-light dropdown-toggle p-0 text-dark" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        &#8942; <!-- Icono de tres puntos verticales en negro -->
+                                    </button>
+                                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                        <li><a class="dropdown-item" href="{% url 'edit' postId=p.0.id %}"><i class="fa-regular fa-pen-to-square"></i>Editar</a></li>
+                                        <li><a class="dropdown-item" href="{% url 'delete' postId=p.0.id %}"><i class="fa-solid fa-trash-can"></i>Eliminar</a></li>
+                                    </ul>
+                                </div>
+                            {% endif %}
+                        </div>
+                        <hr class="my-3">
+                    </div>
+                {% endfor %}
+                {% for c in like_comments %}
+                    <p>{{c.content}}</p>
+                {% endfor %}
+            {% else %}
+                <div class="custom-margin">
+                    <p>Encara no ha desat res</p>
+                </div>
+            {% endif %}
+        {% endif %}
     </div>
 {% endblock %}

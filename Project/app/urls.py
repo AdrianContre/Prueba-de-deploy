@@ -34,4 +34,6 @@ urlpatterns = [
     path("replyComment/<int:commentId>",views.replyComment,name="replyComment"),
     path("voteInPosts/<int:postId>/<str:typeV>",views.voteInPosts,name="voteInPosts"),
     path("likeInPosts/<int:postId>",views.likeInPosts,name="likeInPosts"),
+    path("voteInProfile/<int:postId>/<str:typeV>/<str:username>",views.voteInProfile,name="voteInProfile"),
+    path("likeInProfile/<int:postId>/<str:username>",views.likeInProfile,name="likeInProfile"),
 ]
