@@ -141,18 +141,18 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles_build','static')
 
 
 #AWS
-AWS_ACCESS_KEY_ID = 'ASIASM6MPIBCPLIF365C'
-AWS_SECRET_ACCESS_KEY = 'SigAu8ipVw7Rz0WIJNIbOiKhmNCtwOh9zoDi7NDE'
+AWS_ACCESS_KEY_ID = 'ASIASM6MPIBCN75WTCXG'
+AWS_SECRET_ACCESS_KEY = 'WeryZRmeg4nI1OoSd/6GEA7Ci4kR6FOsIE25OZmh'
 AWS_STORAGE_BUCKET_NAME = 'storageasw'
 AWS_S3_REGION_NAME = 'us-east-1'
-AWS_SESSION_TOKEN = 'FwoGZXIvYXdzEMX//////////wEaDEGE+0FHWlQSYSWjciLRAZa0zViSwAuf1m7TFmsjBiHJAfRKRrtHSC+DHCI7YWVNfrzsrBMXrOIuxzYG+IQHzwX5m0i21p+cugVLTFGSUzpjWCuHwVEi/n3kW3tLUwrs55CaIYIdJdRcZrLBBikkAYVzYUEbgf9tEvPPZ64yxFwmJcWJ4pqxuLUpBbmI1BzlFaFk0eiGsvrCzacGJvrehn+6ccIldL4LRhvBDBa1Wsiu7D+U1xtg/ENScA/Ocim86wcKkGKWmEnJo8ia1WEz40KOtx7lhIW+WDcpSwtv1DcgKLqguKoGMi0kfMf2hKvwjwpQolfLrxzOGEddBwdqmc8iEpdDw3fAZ4Aoit54EI8RzVUOftU='
+AWS_SESSION_TOKEN = 'FwoGZXIvYXdzEOL//////////wEaDHbXFgbQnh1l1DdeOCLRAT8VpkYZVph1NQ48FkkWXsy6+RW+A7s9d63fJCjWVbwoCeLwi5bPHZDcfMvQSfITeHjRFkTdVxFCvuV+6fPPmb0lm1hUmjGl0Za2BdtCtr4ouXckQC4deL+fAmjnlpAMtkkGJXhucZPV/8GR9r37bTQY2MHtL41JEIuQ6pMngKqV+4W++Z5dC4WD8/oyCQ6SlNen8N+NKHeZnaSbl3qIGyBj9Vvn3Db6vRBBhh5UHIXtNIs8+38tCcm/FiYSpHuHmQhi5pMMoK61iodHQ8zS0p4FKOnjvqoGMi2qM8XUr6CjXRF/Qg8li9TzGptbRCrJaKgHFluGOvO28NtuJYUydec5QpEklmc='
 
 DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 
 # Primary Key default field
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-DEFAULT_AVATAR = 'https://s3.amazonaws.com/storageasw/avatars/corazon.png'
+DEFAULT_AVATAR = 'https://cdn-icons-png.flaticon.com/512/1752/1752813.png'
 
 #social app settings
 AUTHENTICATION_BACKENDS = [
