@@ -12,31 +12,10 @@ from django.contrib.auth.decorators import login_required
 from .forms import UserProfileForm
 import numpy as np
 
-def index(request):
-    ordPost = Post.objects.all().order_by('-created_at')
-    form = MyForm(request.POST)
-    if request.method == 'POST':
-        form = MyForm(request.POST)
-        selected_option = form.data['order']
-        if selected_option == 'New':
-            ordPost = Post.objects.all().order_by('-created_at')
-        elif selected_option == 'Old':
-            ordPost = Post.objects.all().order_by('created_at')
-        elif selected_option == 'Most comments':
-            comments = OrderedDict()
-            for p in Post.objects.all():
-                comments[p] = p.numComments
-            comments = OrderedDict(sorted(comments.items(), key=lambda item: item[1], reverse=True))
-            ordPost = list(comments.keys())
-        elif selected_option == 'The best(El NANO)':
-            votes = OrderedDict()
-            for p in Post.objects.all():
-                votes[p] = p.resta
-            votes = OrderedDict(sorted(votes.items(), key=lambda item: item[1], reverse=True))
-            ordPost = list(votes.keys())
-    else:
-        form = MyForm()
-    
+
+WhatShow = "Publicacions"
+
+def infopost(ordPost, request):
     infoPosts = []
     for p in ordPost:
         u = request.user
@@ -54,10 +33,171 @@ def index(request):
             liked = True
         except:
             liked = False
-        infoPosts.append((p,b,v,liked))
-        
+        infoPosts.append((p, b, v, liked))
 
-    return render(request, "app/posts.html", {"posts": infoPosts,"form": form})
+    return infoPosts
+
+def index(request):
+    global WhatShow
+    user = request.user
+    button = request.GET.get('button')
+    button2 = request.GET.get('button2')
+    if button2 is not None: WhatShow = button2
+    if WhatShow == "Publicacions":
+        if button is None or button == 'Tot':
+            ordPost = Post.objects.all().order_by('-created_at')
+            form = MyForm(request.POST)
+            if request.method == 'POST':
+                form = MyForm(request.POST)
+                selected_option = form.data['order']
+                if selected_option == 'New':
+                    ordPost = Post.objects.all().order_by('-created_at')
+                elif selected_option == 'Old':
+                    ordPost = Post.objects.all().order_by('created_at')
+                elif selected_option == 'Most comments':
+                    comments = OrderedDict()
+                    for p in Post.objects.all():
+                        comments[p] = p.numComments
+                    comments = OrderedDict(sorted(comments.items(), key=lambda item: item[1], reverse=True))
+                    ordPost = list(comments.keys())
+                elif selected_option == 'The best(El NANO)':
+                    votes = OrderedDict()
+                    for p in Post.objects.all():
+                        votes[p] = p.resta
+                    votes = OrderedDict(sorted(votes.items(), key=lambda item: item[1], reverse=True))
+                    ordPost = list(votes.keys())
+            else:
+                form = MyForm()
+
+            ordPostI = infopost(ordPost, request)
+            p_c = True
+            return render(request, "app/posts.html", {"posts": ordPostI,"form": form, "p_c": p_c, "comments": ordPostI})
+
+        else:
+            if button == 'Subscrit' and not user.is_authenticated:
+                return render(request, template_name="app/login.html")
+            else:
+                sub = Subscription.objects.filter(user_sub=user)
+                if button == 'Subscrit':
+                    v = []
+                    for s in sub:
+                        v.append(Post.objects.filter(community=s.community_sub))
+                    l = np.concatenate(v)
+                    ordPost = sorted(l, key=lambda x: x.created_at, reverse=True)
+                    form = MyForm(request.POST)
+                    if request.method == 'POST':
+                        form = MyForm(request.POST)
+                        selected_option = form.data['order']
+                        if selected_option == 'New':
+                            ordPost = sorted(l, key=lambda x: x.created_at, reverse=True)
+                        elif selected_option == 'Old':
+                            ordPost = sorted(l, key=lambda x: x.created_at, reverse=False)
+                        elif selected_option == 'Most comments':
+                            comments = OrderedDict()
+                            for p in l:
+                                comments[p] = p.numComments
+                            comments = OrderedDict(sorted(comments.items(), key=lambda item: item[1], reverse=True))
+                            ordPost = list(comments.keys())
+                        elif selected_option == 'The best(El NANO)':
+                            votes = OrderedDict()
+                            for p in l:
+                                votes[p] = p.resta
+                            votes = OrderedDict(sorted(votes.items(), key=lambda item: item[1], reverse=True))
+                            ordPost = list(votes.keys())
+
+                        ordPostI = infopost(ordPost, request)
+                        p_c = True
+                        return render(request, "app/posts.html", {"posts": ordPostI, "form": form, "p_c": p_c, "comments": ordPostI})
+
+                    else:
+                        form = MyForm()
+
+                    ordPostI = infopost(ordPost, request)
+                    p_c = True
+                    return render(request, "app/posts.html", {"posts": ordPostI, "form": form, "p_c": p_c, "comments": ordPostI})
+
+
+    elif WhatShow == 'Comments':
+        if button is None or button == 'Tot':
+            ordComments = Comments.objects.all().order_by('-created_at')
+            form = MyForm(request.POST)
+            if request.method == 'POST':
+                form = MyForm(request.POST)
+                selected_option = form.data['order']
+                if selected_option == 'New':
+                    ordComments = Comments.objects.all().order_by('-created_at')
+                elif selected_option == 'Old':
+                    ordComments = Comments.objects.all().order_by('created_at')
+                elif selected_option == 'Most comments':
+                    comments = OrderedDict()
+                    for p in Post.objects.all():
+                        comments[p] = p.numComments
+                    comments = OrderedDict(sorted(comments.items(), key=lambda item: item[1], reverse=True))
+                    ordComments = list(comments.keys())
+                elif selected_option == 'The best(El NANO)':
+                    votes = OrderedDict()
+                    for c in Comments.objects.all():
+                        votes[c] = c.resta
+                    votes = OrderedDict(sorted(votes.items(), key=lambda item: item[1], reverse=True))
+                    ordComments = list(votes.keys())
+            else:
+                form = MyForm()
+
+            p_c = False
+            return render(request, "app/posts.html",
+                          {"post": ordComments, "form": form, "p_c": p_c, "comments": ordComments})
+
+        else:
+            if button == 'Subscrit' and not user.is_authenticated:
+                return render(request, template_name="app/login.html")
+            else:
+                sub = Subscription.objects.filter(user_sub=user)
+                if button == 'Subscrit':
+                    v = []
+                    for s in sub:
+                        v.append(Post.objects.filter(community=s.community_sub))
+                    l = np.concatenate(v)
+                    c = []
+                    for p in l:
+                        c.append(Comments.objects.filter(post=p))
+                    l = np.concatenate(c)
+                    ordComments = sorted(l, key=lambda x: x.created_at, reverse=True)
+                    form = MyForm(request.POST)
+                    if request.method == 'POST':
+                        form = MyForm(request.POST)
+                        selected_option = form.data['order']
+                        if selected_option == 'New':
+                            ordComments = sorted(l, key=lambda x: x.created_at, reverse=True)
+                        elif selected_option == 'Old':
+                            ordComments = sorted(l, key=lambda x: x.created_at, reverse=False)
+                        elif selected_option == 'Most comments':
+                            comments = OrderedDict()
+                            for p in l:
+                                comments[p] = p.numComments
+                            comments = OrderedDict(sorted(comments.items(), key=lambda item: item[1], reverse=True))
+                            ordComments = list(comments.keys())
+                        elif selected_option == 'The best(El NANO)':
+                            votes = OrderedDict()
+                            for p in l:
+                                votes[p] = p.resta
+                            votes = OrderedDict(sorted(votes.items(), key=lambda item: item[1], reverse=True))
+                            ordComments = list(votes.keys())
+
+                        p_c = False
+                        return render(request, "app/posts.html",{"posts": ordComments, "form": form, "p_c": p_c, "comments": ordComments})
+
+                    else:
+                        form = MyForm()
+
+                    p_c = False
+                    return render(request, "app/posts.html", {"posts": ordComments, "form": form, "p_c": p_c, "comments": ordComments})
+
+    else:
+        form = MyForm()
+        ordPost = Post.objects.all().order_by('-created_at')
+        ordPostI = infopost(ordPost, request)
+        p_c = True
+        return render(request, "app/posts.html", {"posts": ordPostI, "form": form, "p_c": p_c, "comments": ordPostI})
 
 def view_userProfile(request, username):
     try:
@@ -223,24 +363,6 @@ def search(request):
 
     return render(request, "app/cercador.html", {"cercaForm": form})
 
-def boto_rar(request):
-    user = request.user
-    form = MyForm(request.POST)
-    ordPost = Post.objects.all().order_by('-created_at')
-    button = request.GET.get('button')
-    if user.is_authenticated:
-        sub = Subscription.objects.filter(user_sub=user)
-        if button == 'Subscrit':
-            v = []
-            for s in sub:
-                v.append(Post.objects.filter(community=s.community_sub))
-            l = np.concatenate(v)
-            return render(request, "app/posts.html", {"posts": l, "form": form})
-        else:
-            return render(request, "app/posts.html", {"posts": ordPost, "form": form})
-    else:
-        return render(request, template_name="app/login.html")
-
 
 # Vista para crear un post
 def createPost(request):
@@ -356,11 +478,15 @@ def comment(request, postId):
 
 
 def vote(request, postId, typeV):
+    if not request.user.is_authenticated:
+        return render(request, template_name="app/login.html")
     updateInfoVotes(request,postId,typeV)
     return HttpResponseRedirect(reverse('post', kwargs={'postId': postId}))
 
 
 def voteInPosts(request,postId,typeV):
+    if not request.user.is_authenticated:
+        return render(request, template_name="app/login.html")
     updateInfoVotes(request,postId,typeV)
     return HttpResponseRedirect(reverse('index'))
 
@@ -371,50 +497,48 @@ def voteInProfile(request,postId,typeV,username):
 
 
 def updateInfoVotes(request,postId,typeV):
-    if request.user.is_anonymous:
-        return render(request,"app/login.html")
-    else:
-        if request.method == "GET":
-            p = Post.objects.get(id=postId)
-            u = request.user
-            try:
-                aux = Votes.objects.get(voter=u, post=p)
-            except:
-                aux = None
-            if typeV == "positive":
-                if aux == None:
-                    v = Votes(voter=u, post=p, type=typeV)
-                    v.save()
-                    p.positive = p.positive + 1
-                    p.save()
-                elif aux.type == "positive":
-                    aux.delete()
-                    p.positive = p.positive - 1
-                    p.save()
-                elif aux.type == "negative":
-                    aux.delete()
-                    v = Votes(voter=u, post=p, type=typeV)
-                    v.save()
-                    p.negative = p.negative - 1
-                    p.positive = p.positive + 1
-                    p.save()
-            else:
-                if aux == None:
-                    v = Votes(voter=u, post=p, type=typeV)
-                    v.save()
-                    p.negative = p.negative + 1
-                    p.save()
-                elif aux.type == "negative":
-                    aux.delete()
-                    p.negative = p.negative - 1
-                    p.save()
-                elif aux.type == "positive":
-                    aux.delete()
-                    v = Votes(voter=u, post=p, type=typeV)
-                    v.save()
-                    p.negative = p.negative + 1
-                    p.positive = p.positive - 1
-                    p.save()
+
+    if request.method == "GET":
+        p = Post.objects.get(id=postId)
+        u = request.user
+        try:
+            aux = Votes.objects.get(voter=u, post=p)
+        except:
+            aux = None
+        if typeV == "positive":
+            if aux == None:
+                v = Votes(voter=u, post=p, type=typeV)
+                v.save()
+                p.positive = p.positive + 1
+                p.save()
+            elif aux.type == "positive":
+                aux.delete()
+                p.positive = p.positive - 1
+                p.save()
+            elif aux.type == "negative":
+                aux.delete()
+                v = Votes(voter=u, post=p, type=typeV)
+                v.save()
+                p.negative = p.negative - 1
+                p.positive = p.positive + 1
+                p.save()
+        else:
+            if aux == None:
+                v = Votes(voter=u, post=p, type=typeV)
+                v.save()
+                p.negative = p.negative + 1
+                p.save()
+            elif aux.type == "negative":
+                aux.delete()
+                p.negative = p.negative - 1
+                p.save()
+            elif aux.type == "positive":
+                aux.delete()
+                v = Votes(voter=u, post=p, type=typeV)
+                v.save()
+                p.negative = p.negative + 1
+                p.positive = p.positive - 1
+                p.save()
 
 
 def like(request, postId):
@@ -422,31 +546,33 @@ def like(request, postId):
     return HttpResponseRedirect(reverse('post', kwargs={'postId': postId}))
 
 def likeInPosts(request,postId):
+    if not request.user.is_authenticated:
+        return render(request, template_name="app/login.html")
     updatePostLike(request,postId)
     return HttpResponseRedirect(reverse('index'))
 
 def likeInProfile(request,postId,username):
+    if not request.user.is_authenticated:
+        return render(request, template_name="app/login.html")
     updatePostLike(request,postId)
     user = User.objects.get(username=username)
     return HttpResponseRedirect(reverse('userProfile', kwargs={'username': user.username}))
 
 
 def updatePostLike(request,postId):
-    if request.user.is_anonymous:
-        return render(request,"app/login.html")
-    else:
-        if request.method == "GET":
-            p = Post.objects.get(id=postId)
-            u = request.user
-            try:
-                l = Like.objects.get(user_like=u, post_liked=p)
-            except:
-                l = None
-            if l == None:
-                aux_like = Like(user_like=u, post_liked=p)
-                aux_like.save()
-            else:
-                l.delete()
+
+     if request.method == "GET":
+        p = Post.objects.get(id=postId)
+        u = request.user
+        try:
+            l = Like.objects.get(user_like=u, post_liked=p)
+        except:
+            l = None
+        if l == None:
+            aux_like = Like(user_like=u, post_liked=p)
+            aux_like.save()
+        else:
+            l.delete()
 
 
 def likeComment(request, commentId):

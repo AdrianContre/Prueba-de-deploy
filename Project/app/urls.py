@@ -21,7 +21,6 @@ urlpatterns = [
     path("search", views.search, name="search"),
     path('process_text/', views.process_text, name='process_text'),
     path('proccess_comentaris/', views.proccess_comentaris, name='proccess_comentaris'),
-    path('boto_rar/', views.boto_rar, name='boto_rar'),
     path("createCommunity",views.createCommunity,name="createCommunity"),
     path("listCommunity", views.listCommunity, name="listCommunity"),
     path("subscribeCommunity/<str:community_name>", views.subscribeCommunity, name="subscribeCommunity"),

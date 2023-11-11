@@ -35,7 +35,9 @@
     <div class="btn-group custom-margin"  role="group" aria-label="Basic example">
         <a href="{% url 'userProfile' username=user_profile.username %}?button=Publicaciones" class="btn btn-secondary rareButton">Publicacions</a>
         <a href="{% url 'userProfile' username=user_profile.username %}?button=Comentarios" class="btn btn-secondary rareButton">Comentaris</a>
-        <a href="{% url 'userProfile' username=user_profile.username %}?button=Desats" class="btn btn-secondary rareButton">Desats</a>
+        {% if user_profile.username == request.user.username %}
+            <a href="{% url 'userProfile' username=user_profile.username %}?button=Desats" class="btn btn-secondary rareButton">Desats</a>
+        {% endif %}
     </div>
     <div class="posts-comments">
         {% if button == "Publicaciones" %}
@@ -55,9 +57,9 @@
                         </div>
                         <div class="col-auto mr-2">
                             {% if p.1 == True and p.2 == 'positive' %}
-                                <a href="{% url 'voteInProfile' postId=p.0.id typeV='positive' username=user_profile.username%}" class="link"><i class="fa-solid fa-arrow-up" style="color: #e00b0b;"></i></a>
+                                <a href="{% url 'vote' postId=p.0.id typeV='positive' %}" class="link"><i class="fa-solid fa-arrow-up" style="color: #e00b0b;"></i></a>
                             {% else %}
-                                <a href="{% url 'voteInProfile' postId=p.0.id typeV='positive' username=user_profile.username %}" class="link"><i class="fa-solid fa-arrow-up"></i></a>
+                                <a href="{% url 'vote' postId=p.0.id typeV='positive' %}" class="link"><i class="fa-solid fa-arrow-up"></i></a>
                             {% endif %}
                         </div>
                         <div class="col-auto">
@@ -67,16 +69,16 @@
                         </div>
                         <div class="col-auto mr-2">
                             {% if p.1 == True and p.2 == 'negative' %}
-                                <a href="{% url 'voteInProfile' postId=p.0.id typeV='negative' username=user_profile.username %}" class="link"><i class="fa-solid fa-arrow-down" style="color: #e00b0b;"></i></a>
+                                <a href="{% url 'vote' postId=p.0.id typeV='negative' %}" class="link"><i class="fa-solid fa-arrow-down" style="color: #e00b0b;"></i></a>
                             {% else %}
-                                <a href="{% url 'voteInProfile' postId=p.0.id typeV='negative' username=user_profile.username %}" class="link"><i class="fa-solid fa-arrow-down"></i></a>
+                                <a href="{% url 'vote' postId=p.0.id typeV='negative' %}" class="link"><i class="fa-solid fa-arrow-down"></i></a>
                             {% endif %}
                         </div>
                         <div class="col-auto mr-2">
                             {% if p.3 == True %}
-                                <a href="{% url 'likeInProfile' postId=p.0.id username=user_profile.username %}" class="link"><i class="far fa-star" style="color: #eef202;"></i></a>
+                                <a href="{% url 'like' postId=p.0.id %}" class="link"><i class="far fa-star" style="color: #eef202;"></i></a>
                             {% else %}
-                                <a href="{% url 'likeInProfile' postId=p.0.id username=user_profile.username %}" class="link"><i class="far fa-star"></i></a>
+                                <a href="{% url 'like' postId=p.0.id %}" class="link"><i class="far fa-star"></i></a>
                             {% endif %}
                         </div>
                         {% if request.user == p.0.poster %}
@@ -108,7 +110,7 @@
                 </div>
             {% endfor %}
         {% endif %}
-        {% if button == "Desats" %}
+        {% if button == "Desats"%}
             {% if like_posts|length != 0 or like_comments|length != 0 %}
                 {% for p in like_posts %}
                     <div class="col-12 col-lg-6 offset-lg-3 mb-4">
@@ -126,7 +128,7 @@
                             </div>
                             <div class="col-auto mr-2">
                                 {% if p.1 == True and p.2 == 'positive' %}
-                                    <a href="{% url 'vote' postId=p.0.id typeV='positive' userId=p.0.poster %}" class="link"><i class="fa-solid fa-arrow-up" style="color: #e00b0b;"></i></a>
+                                    <a href="{% url 'vote' postId=p.0.id typeV='positive' %}" class="link"><i class="fa-solid fa-arrow-up" style="color: #e00b0b;"></i></a>
                                 {% else %}
                                     <a href="{% url 'vote' postId=p.0.id typeV='positive' %}" class="link"><i class="fa-solid fa-arrow-up"></i></a>
                                 {% endif %}

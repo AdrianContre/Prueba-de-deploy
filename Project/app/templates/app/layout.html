@@ -20,8 +20,8 @@
     <div class="custom-margin">
         <nav class="navbar navbar-expand-lg navbar-light">
             <a class="navbar-brand" href="{% url 'index' %}" style="margin-right: 10px;">programming.dev</a>
-            <a class="nav-link" href="{% url 'listCommunity' %}" style="margin-right: 10px;">Comunidades </a>
-            <a class="nav-link" href="{% url 'createPost' %}" style="margin-right: 10px;">Crear publicación</a>
+            <a class="nav-link" href="{% url 'listCommunity' %}" style="margin-right: 10px;">Comunitats </a>
+            <a class="nav-link" href="{% url 'createPost' %}" style="margin-right: 10px;">Crear Publicació</a>
             <i class="fas fa-heart" style="margin-right: 10px;"></i>
             <div style="display: flex; align-items: center; margin-left: auto;">
                 <a class="nav-link" style="margin-right: 10px;" href="{% url 'search' %}">
@@ -33,11 +33,11 @@
                             <img src="{{ user.avatar_url }}" alt="{{ user.username }}" class="user-avatar">
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="userDropdown">
-                            <li><a class="dropdown-item" href="{% url 'userProfile' user.username %}">Mi Perfil</a></li>
-                            <li><a class="dropdown-item" href="{% url 'logout' %}">Cerrar Sesión</a></li>
+                            <li><a class="dropdown-item" href="{% url 'userProfile' user.username %}">El meu Perfil</a></li>
+                            <li><a class="dropdown-item" href="{% url 'logout' %}">Tancar Sessió</a></li>
                         </ul>
                     {% else %}
-                        <a class="nav-link" href="{% url 'login' %}">Iniciar Sesión</a>
+                        <a class="nav-link" href="{% url 'login' %}">Iniciar Sessió</a>
                     {% endif %}
                 </div>
             </div>
