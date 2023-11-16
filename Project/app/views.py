@@ -11,6 +11,7 @@ from datetime import datetime
 from django.contrib.auth.decorators import login_required
 from .forms import UserProfileForm
 import numpy as np
+from django.conf import settings
 
 
 WhatShow = "Publicacions"
@@ -1148,7 +1149,11 @@ def createCommunity(request):
         id = request.POST["id"]
         name = request.POST["name"]
         banner = request.FILES["banner"]
+        if not banner:
+            banner = settings.DEFAULT_BANNER
         avatar = request.FILES["avatar"]
+        if not avatar:
+            avatar = settings.DEFAULT_AVATAR
         community = Community(id = id, name = name, banner = banner, avatar = avatar)
         community.save()
         v = []

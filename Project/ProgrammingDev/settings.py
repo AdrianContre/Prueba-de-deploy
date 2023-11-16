@@ -154,6 +154,8 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 DEFAULT_AVATAR = 'avatars/corazon.png'
 
+DEFAULT_BANNER = 'communitiesPictures/banner.jpeg'
+
 MEDIA_URL = '/mediafiles/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'mediafiles')
 
