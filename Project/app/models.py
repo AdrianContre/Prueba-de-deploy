@@ -56,9 +56,9 @@ class Community(models.Model):
 
 
 class Post(models.Model):
-    url = models.CharField(max_length=64)
+    url = models.CharField(max_length=64,blank=True,null=True)
     title = models.CharField(max_length=64)
-    description = models.CharField(max_length=500)
+    description = models.CharField(max_length=500,blank=True,null=True)
     community = models.ForeignKey(Community, on_delete=models.CASCADE, blank=True, null=True, related_name="community")
     poster = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True, related_name="user")
     created_at = models.DateTimeField(default=datetime.now)

@@ -132,7 +132,7 @@
                         <li class="list-group-item comment">
                             <p><a href="{% url 'userProfile' username=c.0.commentor.username %}" style="text-decoration:none;"><span style="color: blue;">{{ c.0.commentor.username }}</span></a>
                                 ·  {{c.0.resta}}
-                                · <a href="{% url 'post' postId=c.0.post.id %}">{{ c.0.post.title }}</a>
+                                · <a style="text-decoration: none; color:orange" href="{% url 'post' postId=c.0.post.id %}">{{ c.0.post.title }}</a>
                             </p>
                             {% if c.0.editing %}
                                 <form method="POST" action="{% url 'editComment' commentId=c.0.id %}">

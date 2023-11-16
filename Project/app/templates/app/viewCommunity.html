@@ -67,6 +67,7 @@
             <a href="{% url 'viewCommunity' community_name=community.name %}?button=Comentarios" class="btn btn-secondary cb rareButton2">Comentaris</a>
             <a href="{% url 'viewCommunity' community_name=community.name %}?button=Publicaciones" class="btn btn-secondary cb rareButton2">Publicacions</a>
          </div>
+         <br>
         {% if bool %}
             {% for c in comments %}
                  <div id="comments_section">

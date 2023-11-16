@@ -12,7 +12,7 @@
                     {% csrf_token %}
                     <label class="col-sm-2 col-form-label" for="post-url">URL</label>
                     <div class="col-sm-10">
-                        <input class="form-control mb-3" type="url" id="post-url" name="url">
+                        <input class="form-control mb-3" type="url" id="post-url" name="url" required="false">
                     </div>
 
                     <label class="col-sm-2 col-form-label" for="post-title">Título</label>
@@ -22,7 +22,7 @@
 
                     <label class="col-sm-2 col-form-label">Descripció</label>
                     <div class="col-sm-10">
-                        <textarea class="form-control " name="description-text" id="markdown-textarea-2eMSOam8PPXthWlvRX9I" required="" rows="2" maxlength="50000" style="overflow: hidden; overflow-wrap: break-word; resize: none; text-align: start; height: 191px; form-sizing:content" data-tribute="true"></textarea>
+                        <textarea class="form-control " name="description-text" id="markdown-textarea-2eMSOam8PPXthWlvRX9I" required="" rows="2" maxlength="50000" style="overflow: hidden; overflow-wrap: break-word; resize: none; text-align: start; height: 191px; form-sizing:content" data-tribute="true" required="false"></textarea>
                     </div>
 
                     <label class="col-sm-2 col-form-label">Comunitat</label>
