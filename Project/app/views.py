@@ -1147,8 +1147,8 @@ def createCommunity(request):
     elif user.is_authenticated:
         id = request.POST["id"]
         name = request.POST["name"]
-        banner = request.FILE["banner"]
-        avatar = request.FILE["avatar"]
+        banner = request.FILES["banner"]
+        avatar = request.FILES["avatar"]
         community = Community(id = id, name = name, banner = banner, avatar = avatar)
         community.save()
         v = []
