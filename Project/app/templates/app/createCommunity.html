@@ -8,7 +8,7 @@
         <div class="row">
             <div class="col-12 col-lg-6 offset-lg-3 mb-4">
                 <h1 class="title-form">Crear Comunitat</h1>
-                <form action="{% url 'createCommunity' %}" method="POST">
+                <form action="{% url 'createCommunity' %}" method="POST" enctype="multipart/form-data">
                     {% csrf_token %}
                     <label class="col-sm-2 col-form-label" for="community-id">ID</label>
                     <div class="col-sm-10">
