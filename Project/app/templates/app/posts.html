@@ -54,6 +54,7 @@
             </div>
         </form>
         <div class="form-box">
+            <img src="{{ request.user.avatar_url }}" alt="{{ user.username }}" class="user-avatar">
             <div class="row">
                 {%  if p_c == True %}
                     {% for p in posts %}
