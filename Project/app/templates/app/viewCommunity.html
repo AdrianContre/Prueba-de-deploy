@@ -1,0 +1,209 @@
+{% extends "app/layout.html" %}
+{% load static %}
+{% block head %}
+    <link href="{% static 'app/main.css' %}" rel="stylesheet">
+{% endblock %}
+{% block body %}
+    <style>
+        .custom-margin {
+            margin-left: 200px;
+            margin-right: 200px;
+        }
+        h1 {
+            font-size: 20px;
+            margin-top: 10px; /* Increase the margin above the dropdown menu */
+        }
+        .banner {
+            background-size: cover;
+            height: 200px;
+            text-align: center;
+            color: #fff;
+            padding: 40px;
+        }
+        .avatar {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            overflow: hidden;
+        }
+        .avatar img {
+             width: 100%;
+            height: auto;
+        }
+        .cb {
+            background-color: white;
+            border-color: black;
+            color: black;
+        }
+
+    </style>
+    <div class="custom-margin">
+        <div class="banner">
+            <img src={{community.banner}} alt="Banner">
+        </div>
+        <div class="avatar">
+            <img src={{community.avatar}} alt="Avatar">
+        </div>
+        <div>
+            <h1>{{community.name}}</h1>
+            <p>{{community.id}}</p>
+        </div>
+        <div class="btn-group margin-button"  role="group" aria-label="Basic example">
+            <a href="{% url 'viewCommunity' community_name=community.name %}?button=Comentarios" class="btn btn-secondary cb rareButton2">Comentaris</a>
+            <a href="{% url 'viewCommunity' community_name=community.name %}?button=Publicaciones" class="btn btn-secondary cb rareButton2">Publicacions</a>
+         </div>
+        {% if bool %}
+            {% for c in comments %}
+                 <div id="comments_section">
+                    <ul class="list-group comments">
+                        {% for c in comments %}
+                        <li class="list-group-item comment">
+                            <p><a href="{% url 'userProfile' username=c.0.commentor.username %}" style="text-decoration:none;"><span style="color: blue;">{{ c.0.commentor.username }}</span></a>   ·  {{c.0.resta}}  · <a style="color:orange;text-decoration: none;" href="{% url 'post' postId=c.0.post.id %}">{{ c.0.post.title }}</a></p>
+                            {% if c.0.editing %}
+                                <form method="POST" action="{% url 'editComment' commentId=c.0.id %}">
+                                    {% csrf_token %}
+                                    <textarea class="form-control" name="content">{{ c.0.content }}</textarea>
+                                    <br>
+                                    <div class="col">
+                                        <input type="submit" class="btn btn-success mr-2" value="Guardar">
+                                        <button class="btn btn-success"><a style="text-decoration:none;color:white" href="{% url 'cancelEdit' commentId=c.0.id %}">Cancelar</a></button>
+                                    </div>
+                                </form>
+                            {% else %}
+                                <p>{{ c.0.content }}</p>
+                            {% endif %}
+                            {% if c.0.editing == False %}
+                                <div class="row">
+                                    <div class="col-auto">
+                                        {% if c.1 and c.2 == 'positive' %}
+                                            <a href="{% url 'voteCommentInCommunity' commentId=c.0.id typeV='positive' community_name=community.name %}" class="link"><i class="fa-solid fa-arrow-up" style="color: #e00b0b;"></i></a>
+                                        {% else  %}
+                                            <a href="{% url 'voteCommentInCommunity' commentId=c.0.id typeV='positive' community_name=community.name %}" class="link"><i class="fa-solid fa-arrow-up"></i></a>
+                                        {% endif %}
+                                    </div>
+                                    <div class="col-auto">
+                                        <p class="mr-2">
+                                            {{c.0.positive}}
+                                        </p>
+                                    </div>
+                                    <div class="col-auto">
+                                        {% if c.1 and c.2 == 'negative' %}
+                                            <a href="{% url 'voteCommentInCommunity' commentId=c.0.id typeV='negative' community_name=community.name %}" class="link"><i class="fa-solid fa-arrow-down" style="color: #e00b0b;"></i></a>
+                                        {% else  %}
+                                            <a href="{% url 'voteCommentInCommunity' commentId=c.0.id typeV='negative' community_name=community.name %}" class="link"><i class="fa-solid fa-arrow-down"></i></a>
+                                        {% endif %}
+                                    </div>
+                                    <div class="col-auto">
+                                        <p class="mr-2">
+                                            {{c.0.negative}}
+                                        </p>
+                                    </div>
+                                    <div class="col-auto mr-2">
+                                        {% if c.3 == True %}
+                                            <a href="{% url 'likeCommentInCommunity' commentId=c.0.id community_name=community.name %}" class="link"><i class="far fa-star" style="color: #eef202;"></i></a>
+                                        {% else %}
+                                            <a href="{% url 'likeCommentInCommunity' commentId=c.0.id community_name=community.name %}" class="link"><i class="far fa-star"></i></a>
+                                        {% endif %}
+                                    </div>
+                                    <div class="col-auto">
+                                       <button type="button" class="btn btn-light btn-sm" data-bs-toggle="modal" data-bs-target="#exampleModal_{{c.0.id}}">
+                                        <i class="fa-solid fa-reply"></i>
+                                      </button>
+                                    </div>
+                                    {% if request.user == c.0.commentor %}
+                                        <div class="dropdown col-auto">
+                                            <button class="btn btn-light dropdown-toggle p-0 text-dark" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                &#8942; <!-- Icono de tres puntos verticales en negro -->
+                                            </button>
+                                            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                                <li><a class="dropdown-item" href="{% url 'editComment' commentId=c.0.id %}"><i class="fa-regular fa-pen-to-square"></i>Editar</a></li>
+                                                <li><a class="dropdown-item" href="{% url 'deleteComment' commentId=c.0.id %}"><i class="fa-solid fa-trash-can"></i>Eliminar</a></li>
+                                            </ul>
+                                        </div>
+                                    {% endif %}
+                                </div>
+                                <div class="modal fade" id="exampleModal_{{c.0.id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                      <div class="modal-content">
+                                        <div class="modal-header">
+                                          <h1 class="modal-title fs-5" id="exampleModalLabel">Reply</h1>
+                                          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                          <form action="{% url 'replyComment' commentId=c.0.id %}" method="POST">
+                                            {% csrf_token %}
+                                                <textarea style="border-radius: 10px;" name="reply_comment" cols="50" rows="6"></textarea>
+                                                <br>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+                                                    <button type="submit" class="btn btn-success">Responder</button>
+                                                </div>
+                                          </form>
+                                        </div>
+                                      </div>
+                                    </div>
+                                </div>
+                            {% endif %}
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endfor %}
+        {% else %}
+            {% for p in posts %}
+                <div class="col-12 col-lg-6 offset-lg-3 mb-4">
+                            <p>
+                                <a style="color:black; text-decoration:none;" href="{% url 'post' postId=p.0.id %}"> <h4><b>{{p.0.title}}</b></h4></a>
+                            </p>
+                            <a href="{% url 'userProfile' username=p.0.poster.username %}" style="text-decoration:none;"><span style="color:blue">{{ p.0.poster.username }}</span></a> a <a href="#" style="text-decoration:none"><span style="color:orange">{{ p.0.community.name }}</span></a>  • {{ p.0.created_at }}
+                            <div class="row px-4">
+                                <div class="col-auto mr-2">
+                                    <a href="{% url 'post' postId=p.0.id %}#comments_section" class="link"><i class="far fa-comment"></i></a>
+                                </div>
+                                <div class="col-auto mr-2">
+                                    <p>{{p.0.numComments}}</p>
+                                </div>
+                                <div class="col-auto mr-2">
+                                    {% if p.1 == True and p.2 == 'positive' %}
+                                        <a href="{% url 'voteInCommunity' postId=p.0.id typeV='positive' community_name=community.name %}" class="link"><i class="fa-solid fa-arrow-up" style="color: #e00b0b;"></i></a>
+                                    {% else %}
+                                        <a href="{% url 'voteInCommunity' postId=p.0.id typeV='positive' community_name=community.name %}" class="link"><i class="fa-solid fa-arrow-up"></i></a>
+                                    {% endif %}
+                                </div>
+                                <div class="col-auto">
+                                    <p class="mr-2">
+                                        {{p.0.resta}}
+                                    </p>
+                                </div>
+                                <div class="col-auto mr-2">
+                                    {% if p.1 == True and p.2 == 'negative' %}
+                                        <a href="{% url 'voteInCommunity' postId=p.0.id typeV='negative' community_name=community.name %}" class="link"><i class="fa-solid fa-arrow-down" style="color: #e00b0b;"></i></a>
+                                    {% else %}
+                                        <a href="{% url 'voteInCommunity' postId=p.0.id typeV='negative' community_name=community.name %}" class="link"><i class="fa-solid fa-arrow-down"></i></a>
+                                    {% endif %}
+                                </div>
+                                <div class="col-auto mr-2">
+                                    {% if p.3 == True %}
+                                        <a href="{% url 'likeInCommunity' postId=p.0.id community_name=community.name %}" class="link"><i class="far fa-star" style="color: #eef202;"></i></a>
+                                    {% else %}
+                                        <a href="{% url 'likeInCommunity' postId=p.0.id community_name=community.name %}" class="link"><i class="far fa-star"></i></a>
+                                    {% endif %}
+                                </div>
+                                {% if request.user == p.0.poster %}
+                                    <div class="dropdown col-auto">
+                                        <button class="btn btn-light dropdown-toggle p-0 text-dark" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            &#8942; <!-- Icono de tres puntos verticales en negro -->
+                                        </button>
+                                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                            <li><a class="dropdown-item" href="{% url 'edit' postId=p.0.id %}"><i class="fa-regular fa-pen-to-square"></i>Editar</a></li>
+                                            <li><a class="dropdown-item" href="{% url 'delete' postId=p.0.id %}"><i class="fa-solid fa-trash-can"></i>Eliminar</a></li>
+                                        </ul>
+                                    </div>
+                                {% endif %}
+                            </div>
+                                <hr class="my-3">
+                        </div>
+            {% endfor %}
+        {% endif %}
+    </div>
+{% endblock %}

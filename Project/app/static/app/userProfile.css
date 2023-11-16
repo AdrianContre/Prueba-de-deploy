@@ -53,3 +53,19 @@
     justify-content: flex-start;
     gap: 10px;
 }
+
+
+.custom-margin {
+    margin-left: 200px;
+    margin-right: 200px;
+    margin-bottom: 20px;
+}
+
+.posts-comments {
+    margin-bottom: 100px;
+}
+
+.rareButton {
+    color: black;
+    background-color: white;
+}

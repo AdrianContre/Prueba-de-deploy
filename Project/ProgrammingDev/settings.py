@@ -77,22 +77,23 @@ WSGI_APPLICATION = 'ProgrammingDev.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
-
-#DATABASES = {
- #   'default': {
-  #      'ENGINE': 'django.db.backends.sqlite3',
-   #     'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-    #}
-#}
+'''
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+    }
+}
+'''
 
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'railway', 
         'USER': 'postgres',
-        'PASSWORD': 'b1f53612C3eg6B3aE51D4B*b*4*eF41g',
-        'HOST': 'monorail.proxy.rlwy.net', 
-        'PORT': '46423',
+        'PASSWORD': 'bAa-6Eb1BadGBAFD2e43CECaaB14BdD-',
+        'HOST': 'viaduct.proxy.rlwy.net', 
+        'PORT': '47650',
     }
 }
 
@@ -139,13 +140,12 @@ STATIC_URL = '/static/'
 STATIC_DIRS = os.path.join(BASE_DIR,'static')
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles_build','static')
 
-
 #AWS
-AWS_ACCESS_KEY_ID = 'ASIASM6MPIBCN75WTCXG'
-AWS_SECRET_ACCESS_KEY = 'WeryZRmeg4nI1OoSd/6GEA7Ci4kR6FOsIE25OZmh'
+AWS_ACCESS_KEY_ID = 'ASIASM6MPIBCBG7VNYXW'
+AWS_SECRET_ACCESS_KEY = 'JKxHGJTHOKPKBO0GLIi/xk1CUlpukbJDr/RcLrhc'
 AWS_STORAGE_BUCKET_NAME = 'storageasw'
 AWS_S3_REGION_NAME = 'us-east-1'
-AWS_SESSION_TOKEN = 'FwoGZXIvYXdzEOL//////////wEaDHbXFgbQnh1l1DdeOCLRAT8VpkYZVph1NQ48FkkWXsy6+RW+A7s9d63fJCjWVbwoCeLwi5bPHZDcfMvQSfITeHjRFkTdVxFCvuV+6fPPmb0lm1hUmjGl0Za2BdtCtr4ouXckQC4deL+fAmjnlpAMtkkGJXhucZPV/8GR9r37bTQY2MHtL41JEIuQ6pMngKqV+4W++Z5dC4WD8/oyCQ6SlNen8N+NKHeZnaSbl3qIGyBj9Vvn3Db6vRBBhh5UHIXtNIs8+38tCcm/FiYSpHuHmQhi5pMMoK61iodHQ8zS0p4FKOnjvqoGMi2qM8XUr6CjXRF/Qg8li9TzGptbRCrJaKgHFluGOvO28NtuJYUydec5QpEklmc='
+AWS_SESSION_TOKEN = 'FwoGZXIvYXdzECEaDLQ20ap4XDrzTtcMkSLRAd6M2OgPVtFBC964QTRV0ttuq5ykcRWa1v26Ev32adF9Ahpus+Gqgj/iJUgmJIiP1azhmrTcNHrClOtaCP+VzkSd6znsmjaYZuOlWUP8sujI3sx+buo2yinzXG7LAcBEa5OXKYU1FXiRI0eNWL/Z3DQzqS78neJV4MuEypjmrn4rp7S05WcS2KUqoOjYcWhigXBOCDt6BMzTia/raBQ/3qI2WSprq1k+zpIBl9pdbAH7Qx9zSfsZKmf8yPDuYsWXnlgZ7LZHuDapIIoK/WkSdkcUKOmwlKoGMi2vDPruaao9Hv2c4EB5v3oYe5JJbHayOQBDEZUjmTxIvnBZRVXP0gM5tLWpKQY='
 
 DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 

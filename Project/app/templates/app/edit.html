@@ -6,8 +6,8 @@
 {% block body %}
     <div class="form-box">
         <div class="row">
-           <div class="col-12 col-lg-6 offset-lg-3 mb-4">
-                <h1 class="title-form">Editar publicación</h1>
+           <div class="col-12 col-lg-6 offset-lg-3 mb-4"</div>
+                <h1 class="title-form">Editar publicació</h1>
                 <form action="{% url 'edit' postId=p.id %}" method="POST">
                     {% csrf_token %}
                     <label class="col-sm-2 col-form-label" for="post-url">URL</label>
@@ -15,17 +15,17 @@
                         <input class="form-control mb-3" type="url" id="post-url" name="url" value="{{p.url}}">
                     </div>
 
-                    <label class="col-sm-2 col-form-label" for="post-title">Título</label>
+                    <label class="col-sm-2 col-form-label" for="post-title">Títul</label>
                     <div class="col-sm-10">
                         <input type="text" value="{{p.title}}" class="form-control false" id="post-title" name="title" required="" rows="1" minlength="3" maxlength="200" style="overflow: hidden; overflow-wrap: break-word; resize: none; text-align: start; height: 36px;"></input>
                     </div>
 
-                    <label class="col-sm-2 col-form-label">Descripción</label>
+                    <label class="col-sm-2 col-form-label">Descripció</label>
                     <div class="col-sm-10">
                         <textarea class="form-control" name="description-text" id="markdown-textarea-2eMSOam8PPXthWlvRX9I" required="" rows="2" maxlength="50000" style="overflow: hidden; overflow-wrap: break-word; resize: none; text-align: start; height: 191px; form-sizing:content" data-tribute="true">{{p.description}}</textarea>
                     </div>
 
-                    <label class="col-sm-2 col-form-label">Comunidad</label>
+                    <label class="col-sm-2 col-form-label">Comunitat</label>
                     <div class="col-sm-10">
                         <select class="form-control" name="select-comunity">
                             <option value="{{p.community.name}}">{{p.community.name}}</option>

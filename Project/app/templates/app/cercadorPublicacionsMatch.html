@@ -66,12 +66,56 @@
             <div class="row">
                 {% for p in posts %}
                     <div class="col-12 col-lg-6 offset-lg-3 mb-4">
-                    <p>
-                        <a style="color:black; text-decoration:none;" href="{% url 'post' postId=p.id %}"> <h4><b>{{p.title}}</b></h4></a>
-                    </p>
                         <p>
-                        <a href="#" style="text-decoration:none;"><span style="color:blue">{{ p.poster.username }}</span></a> a <a href="#" style="text-decoration:none"><span style="color:orange">{{ p.community.name }}</span></a>  • {{ p.created_at }}
-                    <hr class="my-3">
+                            <a style="color:black; text-decoration:none;" href="{% url 'post' postId=p.0.id %}"> <h4><b>{{p.0.title}}</b></h4></a>
+                        </p>
+                        <a href="{% url 'userProfile' username=p.0.poster.username %}" style="text-decoration:none;"><span style="color:blue">{{ p.0.poster.username }}</span></a> a <a href="{% url 'viewCommunity' community_name=p.0.community.name %}" style="text-decoration:none"><span style="color:orange">{{ p.0.community.name }}</span></a>  • {{ p.0.created_at }}
+                        <div class="row px-4">
+                            <div class="col-auto mr-2">
+                                <a href="{% url 'post' postId=p.0.id %}#comments_section" class="link"><i class="far fa-comment"></i></a>
+                            </div>
+                            <div class="col-auto mr-2">
+                                <p>{{p.0.numComments}}</p>
+                            </div>
+                            <div class="col-auto mr-2">
+                                {% if p.1 == True and p.2 == 'positive' %}
+                                    <a href="{% url 'voteInPosts' postId=p.0.id typeV='positive' %}" class="link"><i class="fa-solid fa-arrow-up" style="color: #e00b0b;"></i></a>
+                                {% else %}
+                                    <a href="{% url 'voteInPosts' postId=p.0.id typeV='positive' %}" class="link"><i class="fa-solid fa-arrow-up"></i></a>
+                                {% endif %}
+                            </div>
+                            <div class="col-auto">
+                                <p class="mr-2">
+                                    {{p.0.resta}}
+                                </p>
+                            </div>
+                            <div class="col-auto mr-2">
+                                {% if p.1 == True and p.2 == 'negative' %}
+                                    <a href="{% url 'voteInPosts' postId=p.0.id typeV='negative' %}" class="link"><i class="fa-solid fa-arrow-down" style="color: #e00b0b;"></i></a>
+                                {% else %}
+                                    <a href="{% url 'voteInPosts' postId=p.0.id typeV='negative' %}" class="link"><i class="fa-solid fa-arrow-down"></i></a>
+                                {% endif %}
+                            </div>
+                            <div class="col-auto mr-2">
+                                {% if p.3 == True %}
+                                    <a href="{% url 'likeInPosts' postId=p.0.id %}" class="link"><i class="far fa-star" style="color: #eef202;"></i></a>
+                                {% else %}
+                                    <a href="{% url 'likeInPosts' postId=p.0.id %}" class="link"><i class="far fa-star"></i></a>
+                                {% endif %}
+                            </div>
+                            {% if request.user == p.0.poster %}
+                                <div class="dropdown col-auto">
+                                    <button class="btn btn-light dropdown-toggle p-0 text-dark" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        &#8942; <!-- Icono de tres puntos verticales en negro -->
+                                    </button>
+                                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                        <li><a class="dropdown-item" href="{% url 'edit' postId=p.0.id %}"><i class="fa-regular fa-pen-to-square"></i>Editar</a></li>
+                                        <li><a class="dropdown-item" href="{% url 'delete' postId=p.0.id %}"><i class="fa-solid fa-trash-can"></i>Eliminar</a></li>
+                                    </ul>
+                                </div>
+                            {% endif %}
+                        </div>
+                        <hr class="my-3">
                     </div>
                 {% endfor %}
             </div>

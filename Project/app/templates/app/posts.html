@@ -6,6 +6,10 @@
             margin-left: 200px;
             margin-right: 200px;
         }
+        .custom-margin2 {
+            margin-top: 20px;
+
+        }
         .filtre {
             margin-top: 20px;
         }
@@ -14,7 +18,6 @@
             background-color: white; /* Default background color */
 
         }
-
         .rareButton2 {
             color: black; /* Default text color */
             background-color: white; /* Default background color */
@@ -58,7 +61,7 @@
                             <p>
                                 <a style="color:black; text-decoration:none;" href="{% url 'post' postId=p.0.id %}"> <h4><b>{{p.0.title}}</b></h4></a>
                             </p>
-                            <a href="{% url 'userProfile' username=p.0.poster.username %}" style="text-decoration:none;"><span style="color:blue">{{ p.0.poster.username }}</span></a> a <a href="#" style="text-decoration:none"><span style="color:orange">{{ p.0.community.name }}</span></a>  • {{ p.0.created_at }}
+                            <a href="{% url 'userProfile' username=p.0.poster.username %}" style="text-decoration:none;"><span style="color:blue">{{ p.0.poster.username }}</span></a> a <a href="{% url 'viewCommunity' community_name=p.0.community.name %}" style="text-decoration:none"><span style="color:orange">{{ p.0.community.name }}</span></a>  • {{ p.0.created_at }}
                             <div class="row px-4">
                                 <div class="col-auto mr-2">
                                     <a href="{% url 'post' postId=p.0.id %}#comments_section" class="link"><i class="far fa-comment"></i></a>
@@ -108,9 +111,110 @@
                         </div>
                     {% endfor %}
                 {% else %}
-                     {% for c in comments %}
-                         {{ c.content }}
-                     {% endfor %}
+                    <ul class="list-group comments custom-margin2">
+                        {% for c in comments %}
+                            <li class="list-group-item comment">
+                                <p>
+                                    <a href="{% url 'userProfile' username=c.0.commentor.username %}" style="text-decoration:none;"><span style="color: blue;">{{ c.0.commentor.username }}</span></a>
+                                    ·  {{c.0.resta}}
+                                    · <a style="color:orange;text-decoration: none;" href="{% url 'post' postId=c.0.post.id %}">{{ c.0.post.title }}</a>
+                                </p>
+                                {% if c.0.editing %}
+                                    <form method="POST" action="{% url 'editComment' commentId=c.0.id %}">
+                                            {% csrf_token %}
+                                            <textarea class="form-control" name="content">{{ c.0.content }}</textarea>
+                                            <br>
+                                            <div class="col">
+                                                <input type="submit" class="btn btn-success mr-2" value="Guardar">
+                                                <button class="btn btn-success"><a style="text-decoration:none;color:white" href="{% url 'cancelEdit' commentId=c.0.id %}">Cancelar</a></button>
+                                            </div>
+                                        </form>
+                                    {% else %}
+                                        <p>{{ c.0.content }}</p>
+                                    {% endif %}
+                                    {% if c.0.editing == False %}
+                                        <div class="row">
+                                            <div class="col-auto">
+                                                {% if c.1 and c.2 == 'positive' %}
+                                                    <a href="{% url 'voteComment' commentId=c.0.id typeV='positive' %}" class="link"><i class="fa-solid fa-arrow-up" style="color: #e00b0b;"></i></a>
+                                                {% else  %}
+                                                    <a href="{% url 'voteComment' commentId=c.0.id typeV='positive' %}" class="link"><i class="fa-solid fa-arrow-up"></i></a>
+                                                {% endif %}
+                                            </div>
+                                            <div class="col-auto">
+                                                <p class="mr-2">
+                                                    {{c.0.positive}}
+                                                </p>
+                                            </div>
+                                            <div class="col-auto">
+                                                {% if c.1 and c.2 == 'negative' %}
+                                                    <a href="{% url 'voteComment' commentId=c.0.id typeV='negative' %}" class="link"><i class="fa-solid fa-arrow-down" style="color: #e00b0b;"></i></a>
+                                                {% else  %}
+                                                    <a href="{% url 'voteComment' commentId=c.0.id typeV='negative' %}" class="link"><i class="fa-solid fa-arrow-down"></i></a>
+                                                {% endif %}
+                                            </div>
+                                            <div class="col-auto">
+                                                <p class="mr-2">
+                                                    {{c.0.negative}}
+                                                </p>
+                                            </div>
+                                            <div class="col-auto mr-2">
+                                                {% if c.3 == True %}
+                                                    <a href="{% url 'likeComment' commentId=c.0.id %}" class="link"><i class="far fa-star" style="color: #eef202;"></i></a>
+                                                {% else %}
+                                                    <a href="{% url 'likeComment' commentId=c.0.id %}" class="link"><i class="far fa-star"></i></a>
+                                                {% endif %}
+                                            </div>
+                                            <div class="col-auto">
+                                                <button type="button" class="btn btn-light btn-sm" data-bs-toggle="modal" data-bs-target="#exampleModal_{{c.0.id}}">
+                                                    <i class="fa-solid fa-reply"></i>
+                                                </button>
+                                            </div>
+                                            {% if request.user == c.0.commentor %}
+                                            <div class="dropdown col-auto">
+                                                <button class="btn btn-light dropdown-toggle p-0 text-dark" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                    &#8942; <!-- Icono de tres puntos verticales en negro -->
+                                                </button>
+                                                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                                    <li><a class="dropdown-item" href="{% url 'editComment' commentId=c.0.id %}"><i class="fa-regular fa-pen-to-square"></i>Editar</a></li>
+                                                    <li><a class="dropdown-item" href="{% url 'deleteComment' commentId=c.0.id %}"><i class="fa-solid fa-trash-can"></i>Eliminar</a></li>
+                                                </ul>
+                                            </div>
+                                            {% endif %}
+                                        </div>
+                                        <div class="modal fade" id="exampleModal_{{c.0.id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h1 class="modal-title fs-5" id="exampleModalLabel">Reply</h1>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <form action="{% url 'replyComment' commentId=c.0.id %}" method="POST">
+                                                            {% csrf_token %}
+                                                            <textarea style="border-radius: 10px;" name="reply_comment" cols="50" rows="6"></textarea>
+                                                            <br>
+                                                            <div class="modal-footer">
+                                                                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+                                                                <button type="submit" class="btn btn-success">Responder</button>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    {% endif %}
+                                    {% with c.0.replies.all as subcomments %}
+                                        {% if subcomments %}
+                                            <ul class="list-group">
+                                                {% include "app/comment_template.html" with comments=subcomments info=infoSubcomments %}
+                                            </ul>
+                                        {% endif %}
+                                    {% endwith %}
+                                </li>
+                            {% endfor %}
+                        </ul>
+
                 {% endif %}
             </div>
         </div>

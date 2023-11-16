@@ -32,8 +32,8 @@ class User(AbstractUser):
 class Community(models.Model):
     name = models.CharField(max_length=20, blank=True, null=True)
     id = models.CharField(max_length=20, primary_key=True)
-    banner = models.ImageField(upload_to='Project/ProgrammingDev/app/static/communitiesPictures', blank=True, null=True)
-    avatar = models.ImageField(upload_to='Project/ProgrammingDev/app/static/communitiesPictures', blank=True, null=True)
+    banner = models.ImageField(upload_to='communitiesPictures/', blank=True, null=True)
+    avatar = models.ImageField(upload_to='communitiesPictures/', blank=True, null=True)
 
     def __str__(self):
         return f"{self.name}"
@@ -123,7 +123,8 @@ class Like(models.Model):
 
 class LikeComment(models.Model):
     user_like = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True, related_name="userC_like")
-    comment_liked = models.ForeignKey(Comments, on_delete=models.CASCADE, blank=True, null=True,related_name="comment_liked")
+    comment_liked = models.ForeignKey(Comments, on_delete=models.CASCADE, blank=True, null=True,
+                                      related_name="comment_liked")
 
 class Comment(models.Model):
     user_profile = models.ForeignKey(User, on_delete=models.CASCADE, related_name="comments")

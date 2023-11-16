@@ -7,7 +7,7 @@
     <div class="form-box">
         <div class="row">
             <div class="col-12 col-lg-6 offset-lg-3 mb-4">
-                <h1 class="title-form">Crear comunidad</h1>
+                <h1 class="title-form">Crear Comunitat</h1>
                 <form action="{% url 'createCommunity' %}" method="POST">
                     {% csrf_token %}
                     <label class="col-sm-2 col-form-label" for="community-id">ID</label>
@@ -15,7 +15,7 @@
                         <input type="text" class="form-control false" id="community-id" name="id" required="" rows="1" minlength="3" maxlength="20" style="overflow: hidden; overflow-wrap: break-word; resize: none; text-align: start; height: 36px;"></input>
                     </div>
 
-                    <label class="col-sm-2 col-form-label" for="community-name">Name</label>
+                    <label class="col-sm-2 col-form-label" for="community-name">Nom</label>
                     <div class="col-sm-10">
                         <input type="text" class="form-control false" id="community-name" name="name" required="" rows="1" minlength="3" maxlength="20" style="overflow: hidden; overflow-wrap: break-word; resize: none; text-align: start; height: 36px;"></input>
                     </div>
