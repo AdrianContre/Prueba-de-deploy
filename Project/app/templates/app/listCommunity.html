@@ -54,22 +54,6 @@
                     <a href="{% url 'listCommunity' %}?button=Subscrit" class="btn btn-secondary cb rareButton2">Subscrit</a>
                     <a href="{% url 'listCommunity' %}?button=Tot" class="btn btn-secondary cb rareButton2">Tot</a>
                 </div>
-                <button class="btn btn-secondary dropdown-toggle" style="background-color: white; color: black;" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                    {% if not form.order.value %}
-                        Nou
-                    {% else %}
-                        {% for choice in form.ORDER_CHOICES %}
-                            {% if choice.1 == form.order.value %}
-                                {{ choice.0 }}
-                            {% endif %}
-                        {% endfor %}
-                    {% endif %}
-                </button>
-                <ul class="dropdown-menu">
-                    {% for choice in form.ORDER_CHOICES %}
-                        <button class="dropdown-item" style="background-color: white; color: black;" onclick="this.style.backgroundColor = 'white';" type="submit" name="order" value="{{ choice.1 }}">{{ choice.0 }}</button>
-                    {% endfor %}
-                </ul>
                 <a href="{% url 'createCommunity' %}" class="btn btn-secondary align-right">Crear Comunitat</a>
             </div>
         </form>
