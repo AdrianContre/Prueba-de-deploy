@@ -577,6 +577,8 @@ def createPost(request):
             title = request.POST["title"]
             description = request.POST["description-text"]
             community = request.POST["select-comunity"]
+            if community == "default":
+                return HttpResponseRedirect(reverse('createPost'))
             user = request.user
             c = Community.objects.get(name=community)
             post = Post(url=url, title=title, description=description, community=c, poster=user)
