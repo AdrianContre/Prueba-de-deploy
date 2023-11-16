@@ -1147,17 +1147,15 @@ def createCommunity(request):
     elif user.is_authenticated:
         id = request.POST["id"]
         name = request.POST["name"]
-        banner = request.POST["banner"]
-        avatar = request.POST["avatar"]
+        banner = request.FILE["banner"]
+        avatar = request.FILE["avatar"]
         community = Community(id = id, name = name, banner = banner, avatar = avatar)
         community.save()
         v = []
         sub = Subscription.objects.filter(user_sub=user)
         for s in sub:
             v.append((s.community_sub, True))
-        return render(request, template_name="app/listCommunity.html", context={
-            "communities": v
-        })
+        return HttpResponseRedirect(reverse('listCommunity'))
     else:
         return render(request, template_name="app/login.html")
 
