@@ -1148,12 +1148,14 @@ def createCommunity(request):
     elif user.is_authenticated:
         id = request.POST["id"]
         name = request.POST["name"]
-        banner = request.FILES["banner"]
+        avatar = request.FILES.get("avatar", None)  # Obtiene el archivo de avatar o None si no se proporciona
+        banner = request.FILES.get("banner", None)  # Obtiene el archivo de banner o None si no se proporciona
+
+        # Verifica si avatar y banner están vacíos y asigna las URLs por defecto desde settings
+        if not avatar:
+            avatar = settings.DEFAULT_AVATAR  # Reemplaza 'DEFAULT_AVATAR_URL' con tu URL por defecto para el avatar
         if not banner:
             banner = settings.DEFAULT_BANNER
-        avatar = request.FILES["avatar"]
-        if not avatar:
-            avatar = settings.DEFAULT_AVATAR
         community = Community(id = id, name = name, banner = banner, avatar = avatar)
         community.save()
         v = []
