@@ -2,6 +2,7 @@
 {% load static %}
 {% block head %}
     <link href="{% static 'app/main.css' %}" rel="stylesheet">
+    <link href="{% static 'app/userProfile.css' %}" rel="stylesheet">
 {% endblock %}
 {% block body %}
     <style>
@@ -38,15 +39,29 @@
 
     </style>
     <div class="custom-margin">
+        <!--
         <div class="banner">
-            <img src={{community.banner.url}} alt="Banner">
+            <img src={{community.banner.url}} alt="Banner" class="banner-image">
         </div>
         <div class="avatar">
-            <img src={{community.avatar.url}} alt="Avatar">
+            <img src={{community.avatar.url}} alt="Avatar" class="profile-avatar">
         </div>
         <div>
             <h1>{{community.name}}</h1>
             <p>{{community.id}}</p>
+        </div>
+        -->
+        <div class="profile-container">
+            <div class="banner-container">
+                <img src={{community.banner.url}} alt="Banner" class="banner-image">
+            </div>
+            <div class="profile-content">
+                <img src="{{ community.avatar.url }}" class="profile-avatar">
+                <h1 class="title-user"> {{community.name}} </h1>
+            </div>
+            <div class="profile-info">
+                <p>{{community.id}}</p>
+            </div>
         </div>
         <div class="btn-group margin-button"  role="group" aria-label="Basic example">
             <a href="{% url 'viewCommunity' community_name=community.name %}?button=Comentarios" class="btn btn-secondary cb rareButton2">Comentaris</a>
