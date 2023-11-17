@@ -91,9 +91,9 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'railway', 
         'USER': 'postgres',
-        'PASSWORD': '66B3c4FdC6gcf24*BDFfEcaFff5F4BCc',
-        'HOST': 'monorail.proxy.rlwy.net', 
-        'PORT': '18543',
+        'PASSWORD': 'aA-3fA52dce5ED-3AG-aGAfBB61daeGB',
+        'HOST': 'roundhouse.proxy.rlwy.net', 
+        'PORT': '37808',
     }
 }
 
@@ -141,11 +141,11 @@ STATIC_DIRS = os.path.join(BASE_DIR,'static')
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles_build','static')
 
 #AWS
-AWS_ACCESS_KEY_ID = 'ASIASM6MPIBCKFXT5UWC'
-AWS_SECRET_ACCESS_KEY = 'hj5d5UqVhddRwPtFMays56Q+QA3ISMxsb49DXrrj'
+AWS_ACCESS_KEY_ID = 'ASIASM6MPIBCD2P3TAKE'
+AWS_SECRET_ACCESS_KEY = '2smaGOrCtfJXPlVXXjFw9X/aPu6R+FLSKBlhu4pj'
 AWS_STORAGE_BUCKET_NAME = 'storageasw'
 AWS_S3_REGION_NAME = 'us-east-1'
-AWS_SESSION_TOKEN = 'FwoGZXIvYXdzEFoaDLn63uF5zN8hD1FVWSLRASYo7C80LBDSr+pcXnICSSoeovdEp7UZ6+YYSt6FU3vdP1Dw2cW+F5zXuk6ZzPh53ztwdNTUDAYT17rNMTKlg/41DbJ2RAC6MTEdn53pGhDXhkL7PMknXo+8Y7qLQVxaWDQT7sYvYRT+scEM9Om6/YMK4Q6Q/zGa/AylAPACzXWdQiat+mTL+1zxRDD2yBKTWxAIvjH3s/vtrT3VD4AXlfH8za4npuUEmZrYUJOuLIYZ5uBAf9RVLM+JIUA9nwsKir0fJ982LORtS7x6lTHl/NF6KID+2KoGMi24OB0zkFsLetNUrspbwJyNIeR2mUZWKeRTiQGUH/IlDrZfIlc7VHEByez9EmQ='
+AWS_SESSION_TOKEN = 'FwoGZXIvYXdzEGsaDIn8OwGaXst8Qld+eSLRAecvrbo5ldreMrqWNUmPp6P+o47AYopyVPtqkit8A1QfyRbrSpZC7rzqsOkmaZmWtqPK2SAL+p22twHZPqNUNZFD9BZPDCZqcn0MOsyWXAwaEM+40Lik/TrOxqD8fSjJGIfWNaib5ZAgxZJyZrkxNWu+oNEBnR2EZ6zfBhg2ExcUHu+7o3FGo1fJzu3wBJmkYc0elC8jpl7AscpuaV2muBOdXQqiSvrGARe9/6RGQkkUgrFjnFlSwM4lxmG6l9CbfpLmMmhjgR6zN58JVQcB/2RPKIDu3KoGMi3oADQutHFx1JclgeLTBT7+F+cDxr0CwhTM930n29NWSoKHtgzCCj6vcnZHSI4='
 
 DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 
